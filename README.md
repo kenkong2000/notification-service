@@ -26,22 +26,24 @@ Request Body:
 Mandatory fields: To
 
 Body payload example: json/application
-    [
-      { "to":["tester@rakenapp.com", "tester2@rakenapp.com"], 
-       "cc": [ "manager@rakenapp.com"], 
-       "bcc":[], 
-       "subject":"test subject", 
-       "body": "this is just a test"
-
-       }, 
+    
+      
+       [
+        { "to":["test@rakenapp.com", "test2@rakenapp.com"], 
+         "cc": ["manager@rakenapp.com"], 
+         "bcc":[], 
+         "subject":"hello world", 
+         "body": "hello ken" 
+       },
        { "to":["ken@test.com"], 
          "cc": [], 
          "bcc":[], 
          "subject":"hello world", 
          "body": "hello ken" 
        }
+       ]
 
-]
+
 
 Responses:
 
