@@ -6,6 +6,8 @@ This is a sample asynchronous services server to send email thru sendgrid.com
 
 Integration test with @SpringBootTest should be separated in another project or using SoapUI to test it automatically.
 
+Required to setup environment variable: SENDGRID_API_KEY for sendgrid
+
 Application.properties:
 
 	send.raken.only true/false - send only to rakenapp.com domain if true. Default to true
