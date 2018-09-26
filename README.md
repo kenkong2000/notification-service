@@ -17,9 +17,9 @@ Authorization: Basic
 Request Parameters :
 
 	enrich true/false - true will append message of the day provided by motd.source
-  motd.source - url for the message of the day source
-  motd.user - basic auth username for motd source
-  motd.password - basic auth password for motd password
+  	motd.source - url for the message of the day source
+  	motd.user - basic auth username for motd source
+  	motd.password - basic auth password for motd password
   
 Request Body:
 
