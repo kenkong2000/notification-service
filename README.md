@@ -8,7 +8,10 @@ Integration test with @SpringBootTest should be separated in another project or 
 
 Application.properties:
 
-send.raken.only true/false - send only to rakenapp.com domain if true. Default to true
+	send.raken.only true/false - send only to rakenapp.com domain if true. Default to true
+	motd.source - url for the message of the day source
+  	motd.user - basic auth username for motd source
+  	motd.password - basic auth password for motd password
 
 URL: POST /api/notification/email
 
@@ -17,9 +20,7 @@ Authorization: Basic
 Request Parameters :
 
 	enrich true/false - true will append message of the day provided by motd.source
-  	motd.source - url for the message of the day source
-  	motd.user - basic auth username for motd source
-  	motd.password - basic auth password for motd password
+  	
   
 Request Body:
 
