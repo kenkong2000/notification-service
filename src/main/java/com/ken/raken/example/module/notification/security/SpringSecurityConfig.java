@@ -21,7 +21,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationEntryPoint authEntryPoint;
 	
-	
+	private static final String USER = "kenk";
+	private static final String PW = "strongpasswordhaha";
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -34,8 +35,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {		
 		//TODO Just to make it fast for simple auth.
-		auth.inMemoryAuthentication().withUser("kenk").password(passwordEncoder().encode("strongpasswordhaha")).roles("SUPERUSER");
+		auth.inMemoryAuthentication().withUser(USER).password(passwordEncoder().encode(PW)).roles("SUPERUSER");
 		
+	}
+	
+	public String getBasicCred() {
+		return USER+":"+PW;
 	}
 	
 	@Bean
