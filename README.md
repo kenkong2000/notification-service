@@ -4,7 +4,7 @@ Raken Email Service Demo 1.0.0
 
 This is a sample asynchronous services server to send email thru sendgrid.com
 
-Integration test with @SpringBootTest should be separated in another project or using SoapUI to test it automatically.
+Actual Integration test should be separated such as running automatic SoapUI test connected to DEV/QA server
 
 Required to setup environment variable: SENDGRID_API_KEY for sendgrid
 
