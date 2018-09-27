@@ -11,6 +11,7 @@ import com.ken.raken.example.module.notification.service.NotificationService;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -29,7 +30,7 @@ public class NotificationRestController  extends SpringBootServletInitializer{
 	  private NotificationService service;
 	
 	 @RequestMapping(value = "/email", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	 public ResponseEntity<?> createEmails(@RequestBody List<NotificationDto> notificationDtos, @RequestParam(value="enrich", required=false) final Boolean enrich)  throws ApiException {
+	 public ResponseEntity<?> createEmails(@Valid @RequestBody List<NotificationDto> notificationDtos, @RequestParam(value="enrich", required=false) final Boolean enrich)  throws ApiException {
 		 	service.sendEmailAsyn(notificationDtos, enrich);
 		 	
 	        return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

@@ -62,18 +62,27 @@ public class NotificationRestControllerTest {
 	 
 	 @Test
 	 public void  whenCallWithAuth_butNoBody_thenBadRequest() {
-		 List<NotificationDto> list = new ArrayList<>();
+		
 		 HttpEntity<String> request = new HttpEntity<String>(headers);
 		 ResponseEntity<String> responseEntity = restTemplate.exchange("/api/notification/email", HttpMethod.POST, request, String.class);
 		 assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	 }
 	 
-	 
-	 // With body but need to unblock the validator @RequestBody
+		 
+	 @Test
+	 public void  whenCallWithWrongJsonBody_NotAList_thenSuccess() {
+		 
+		 headers.setContentType(MediaType.APPLICATION_JSON);
+		 String requestJson ="{\"to\":[\"ken@test.com\"],\"subject\":\"my subject\", \"body\":\"hellow world!\" }";
+		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+		 ResponseEntity<String> responseEntity = restTemplate
+		            .exchange("/api/notification/email", HttpMethod.POST, entity, String.class);		
+		 assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+	 }
 	 
 	 @Test
 	 public void  whenCallWithJsonBody_thenSuccess() {
-		 List<NotificationDto> list = new ArrayList<>();		 
+		 
 		 headers.setContentType(MediaType.APPLICATION_JSON);
 		 String requestJson ="[{\"to\":[\"ken@test.com\"],\"subject\":\"my subject\", \"body\":\"hellow world!\" }]";
 		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
@@ -84,7 +93,7 @@ public class NotificationRestControllerTest {
 	 
 	 @Test
 	 public void  whenCallWith_multiple_toaddress_thenSuccess() {
-		 List<NotificationDto> list = new ArrayList<>();		 
+		 	 
 		 headers.setContentType(MediaType.APPLICATION_JSON);
 		 String requestJson ="[{\"to\":[\"ken@test.com\", \"test@rakenapp.com\"],\"subject\":\"my subject\", \"body\":\"hellow world!\" }]";
 		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
@@ -94,4 +103,5 @@ public class NotificationRestControllerTest {
 	 }
 	 
 	
+	 // With body but need to valid the validator NotifcationDto
 }
