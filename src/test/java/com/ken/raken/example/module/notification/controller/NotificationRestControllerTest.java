@@ -19,6 +19,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.test.context.junit4.SpringRunner;
@@ -70,6 +71,27 @@ public class NotificationRestControllerTest {
 	 
 	 // With body but need to unblock the validator @RequestBody
 	 
-
-
+	 @Test
+	 public void  whenCallWithJsonBody_thenSuccess() {
+		 List<NotificationDto> list = new ArrayList<>();		 
+		 headers.setContentType(MediaType.APPLICATION_JSON);
+		 String requestJson ="[{\"to\":[\"ken@test.com\"],\"subject\":\"my subject\", \"body\":\"hellow world!\" }]";
+		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+		 ResponseEntity<String> responseEntity = restTemplate
+		            .exchange("/api/notification/email", HttpMethod.POST, entity, String.class);		
+		 assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+	 }
+	 
+	 @Test
+	 public void  whenCallWith_multiple_toaddress_thenSuccess() {
+		 List<NotificationDto> list = new ArrayList<>();		 
+		 headers.setContentType(MediaType.APPLICATION_JSON);
+		 String requestJson ="[{\"to\":[\"ken@test.com\", \"test@rakenapp.com\"],\"subject\":\"my subject\", \"body\":\"hellow world!\" }]";
+		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+		 ResponseEntity<String> responseEntity = restTemplate
+		            .exchange("/api/notification/email", HttpMethod.POST, entity, String.class);		
+		 assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+	 }
+	 
+	
 }
