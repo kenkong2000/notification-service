@@ -1,0 +1,89 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Notification server. "
+  version: "1.0.0"
+  title: "Swagger Notification Microservice"
+
+ 
+host: "localhost:8080"
+basePath: "/api/notification"
+tags:
+- name: "email"
+  description: "Email notification"
+- name: "sms"
+  description: "Notification thru sms"
+- name: "app"
+  description: "Application notification"
+  
+schemes:
+- "https"
+- "http"
+paths:
+  /email:
+    post:
+      tags:
+      - "email"
+      summary: "Send email"
+      description: "To send email"
+      operationId: "addPet"
+      consumes:
+      - "application/json"
+     
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/EmailDtos"
+      responses:
+        204:
+          description: "Success"
+        400:
+          description: "Bad Request. Check the body payload"
+        401:
+          description: "Bad authentication. Check the credentials"
+        415:
+          description: "Wrong media type. Use json/application"
+      security:
+        - basicAuth: []
+      
+
+ 
+securityDefinitions:
+  basicAuth:
+    type: basic
+    
+    
+definitions:
+  
+  EmailDtos:
+    type: "array"
+    items:
+          $ref: "#/definitions/EmailDto"
+ 
+  EmailDto:
+    type: "object"
+    required:
+    - "to"
+    properties:
+      to:
+        type: "array"
+        items:
+          type: "string"
+      cc:
+        type: "array"
+        items:
+          type: "string"
+      bcc:
+        type: "array"
+        items:
+          type: "string"
+      subject:
+        type: "string"
+        example: "Hello World"
+      body:
+        type: "string"
+        example: "Hello World"
+    xml:
+      name: "Pet"

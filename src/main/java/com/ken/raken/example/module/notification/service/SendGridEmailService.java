@@ -12,12 +12,16 @@ public class SendGridEmailService implements SendServiceProvider{
 	
 	Logger logger = LogManager.getLogger(SendGridEmailService.class);
 	
+	private SendGrid sg;
+	
+	public SendGridEmailService(SendGrid sg) {
+		this.sg = sg;
+	}
 	
 	public void send(final String mailFrom, final String recipient, final String subject, final String body)  {
 		logger.info("Send email from {} to {} subject {}", mailFrom, recipient, subject);
 		Email from = new Email(mailFrom);
-	 	Content content = new Content("text/plain", body);    
-	    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));	  
+	 	Content content = new Content("text/html", body);  	 
     	Request request = new Request();
     	Email to = new Email(recipient);
     	Mail mail = new Mail(from, subject, to, content);
@@ -28,7 +32,7 @@ public class SendGridEmailService implements SendServiceProvider{
 	    	  request.setBody(mail.build());
 		      Response response = sg.api(request);
 		      logger.info(response.getStatusCode());
-		     
+		     // save status for tracking
 	    } catch (IOException e) {
 	    	logger.error(e);
 	    }

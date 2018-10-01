@@ -55,7 +55,7 @@ public class NotificationService {
 	@Async
 	public void sendEmailAsyn(final List<NotificationDto> dtos, Boolean enrich) throws ApiException {
 		logger.debug("asyn task - start sending emails");
-		//List<NotificationDtos> notifications = dtos.getNotificationDto();
+		
 		if(enrich == null) {
 			enrich=false;
 		}
@@ -73,13 +73,11 @@ public class NotificationService {
 			RestClientHelperResponse messageOfTheDay = restClientHelper.getnResourceByBasicAuth(motdSource,motdSourceUser, motdSourcePassword);
 			//TODO use template engine for example Velocity to insert message of the day header
 			StringBuilder sb = new StringBuilder(dto.getBody());
-			sb.append("\n").append(messageOfTheDay);
+			sb.append("\n").append(messageOfTheDay.getBody());
 			dto.setBody(sb.toString());
 		}
 		
-		
-		
-		//TODO to use @Valid to emailDto 
+				
 		// filter invalid emails 
 		List<String> sendList = new ArrayList<>();
 		filterMail(dto.getTo(), sendList);
@@ -88,8 +86,7 @@ public class NotificationService {
 		
 		for(String recipient: sendList) {
 			SendServiceProvider sendServiceProvider = sendServiceProviderSimpleFactory.getSendServiceProvider(recipient);			
-			sendServiceProvider.send(fromEmail, recipient, dto.getSubject(), dto.getBody());
-			
+			sendServiceProvider.send(fromEmail, recipient, dto.getSubject(), dto.getBody());			
 		}
 		
 	}
@@ -122,7 +119,7 @@ public class NotificationService {
                 .collect(Collectors.toList());    
 		
 		
-		result.addAll(sendList);
+		sendList.addAll(result);
 		
 	}
 

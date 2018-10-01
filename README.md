@@ -8,12 +8,17 @@ Actual Integration test should be separated such as running automatic SoapUI tes
 
 Required to setup environment variable: SENDGRID_API_KEY for sendgrid
 
+
 Application.properties:
 
 	send.raken.only true/false - send only to rakenapp.com domain if true. Default to true
 	motd.source - url for the message of the day source
-  	motd.user - basic auth username for motd source
-  	motd.password - basic auth password for motd password
+	motd.user - basic auth username for motd source
+	motd.password - basic auth password for motd password
+	pool.size - pool size for the async service. Default to 1
+	max.pool.size - maximum pool size for the async service. Default to 10
+	queue.capacity - queue size to consume in the pool. Default to 200
+	
 
 URL: POST /api/notification/email
 
@@ -50,7 +55,7 @@ Body payload example: json/application
 
 Responses:
 
-Code 204 - Success 
-Code 400 - Bad Request 
-Code 401 - Bad authentication 
-Code 403 - No permission for user role
+	Code 204 - Success 
+	Code 400 - Bad Request 
+	Code 401 - Bad authentication 
+	Code 403 - No permission for user role

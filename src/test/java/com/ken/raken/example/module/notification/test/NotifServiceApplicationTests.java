@@ -29,16 +29,6 @@ public class NotifServiceApplicationTests {
 
 	@Test
 	public void contextLoads() {
-//		mvc.perform(post("/api/notification/email")
-//			      .body(""))
-//			      .andExpect(400)
-		
-		// Need some time to make the mvc.perform to work but test cases can start here
-		
-		//mvc.perform(post("/api/notification/email")
-		//		      .body("[\"to\":[\"test@test.com\"], \"subject\":\"test\", \"body\":\"just body\" ]"))
-		//		      .andExpect(204);
-		
 		
 	}
 

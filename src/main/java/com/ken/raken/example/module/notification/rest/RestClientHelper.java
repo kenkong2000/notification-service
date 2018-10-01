@@ -7,6 +7,8 @@ import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,13 +16,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.ken.raken.example.module.notification.exception.ApiException;
+import com.ken.raken.example.module.notification.service.NotificationService;
 
 import java.io.IOException;
 
 
 public class RestClientHelper {
 
-	// Use restTemplate if I have more time
+	Logger logger = LogManager.getLogger(RestClientHelper.class);
 		
 	public RestClientHelper() {
 		
@@ -48,7 +51,8 @@ public class RestClientHelper {
                 result.setBody(method.getResponseBodyAsString());
 
             } catch (IOException e) {
-                throw new ApiException(e.getMessage());
+            	//should not affect the process if motd fail
+            	logger.info("fail to retrieve motd: {}", e.getMessage());
             } finally {
                 method.releaseConnection();
             }
