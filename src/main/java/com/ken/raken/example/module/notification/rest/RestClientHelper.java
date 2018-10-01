@@ -31,6 +31,8 @@ public class RestClientHelper {
     
     public RestClientHelperResponse getnResourceByBasicAuth(final String url, final String user, final String password) throws ApiException {
     	    	
+    	// Implement resttemplate in future
+    	
         GetMethod method = new GetMethod(url);
         method.setDoAuthentication(true);
         method.setRequestHeader("MimeType", "application/json");
