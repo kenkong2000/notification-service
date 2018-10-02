@@ -63,7 +63,7 @@ public class MotdHelper {
 		try {
 			final String location=locations.get(new Random().nextInt(locations.size()));
 			ResponseEntity<String> response = restClientHelper.getnResource(buildUrl(location), HttpMethod.GET, MediaType.APPLICATION_JSON,
-																								new ApiKeyAuthType("APPID", openWeatherApiKey));
+																								new ApiKeyAuthType(openWeatherApiKey));
 			if(response.getStatusCode() == HttpStatus.OK) {
 				ObjectMapper mapper = new ObjectMapper();
 			    JsonNode jsonObject = mapper.readTree(response.getBody()).path("weather");

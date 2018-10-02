@@ -5,17 +5,16 @@ import org.springframework.http.HttpHeaders;
 
 public class ApiKeyAuthType implements AuthType{
 	
-	private String apiKeyName;
+	
 	private String apiKeyValue;
 	
-	public ApiKeyAuthType(final String apiKeyName, final String apiKeyValue) {
-		this.apiKeyName = apiKeyName;
+	public ApiKeyAuthType(final String apiKeyValue) {		
 		this.apiKeyValue = apiKeyValue;
 	}
 	
 	public HttpHeaders getHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add(apiKeyName, apiKeyValue);
+		headers.add("Authorization", "Bearer " + apiKeyValue);		
 		return headers;
 	}
 
