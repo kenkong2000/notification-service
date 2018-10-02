@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +18,12 @@ public class SendServiceProviderSimpleFactory {
 	
 	@Value("${send.raken.only:true}")
     private String sendRakenOnly;
-			
+	
+	@Autowired
 	private SendGridEmailService sendGridEmailService;
 
-	
+	@Autowired
+	private LoggingEmailService loggingEmailService;
 	
 	/**
 	 * Factory to create send service provider.
@@ -36,25 +39,15 @@ public class SendServiceProviderSimpleFactory {
 
     	if(Boolean.parseBoolean(sendRakenOnly)) {
     		if(email.contains("rakenapp.com")) {
+        		return sendGridEmailService;
         		
-        		return getSendGridEmailService();
         	}
-    		return new LoggingEmailService();
+    		return loggingEmailService;
         	
     	}
-    	
-    	return  getSendGridEmailService();
-    }
-    
-    
-    private SendGridEmailService getSendGridEmailService() {
-    	// improve performance
-    	if(sendGridEmailService == null) {
-    		SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));	 
-    		sendGridEmailService = new SendGridEmailService(sg);    		
-    	}
-    	
     	return sendGridEmailService;
-    }
+    	
+    }    
+
 
 }

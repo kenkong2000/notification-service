@@ -6,15 +6,20 @@ This is a sample asynchronous services server to send email thru sendgrid.com
 
 Actual Integration test should be separated such as running automatic SoapUI test connected to DEV/QA server
 
-Required to setup environment variable: SENDGRID_API_KEY for sendgrid
+Required to setup environment variable: 
+	
+	SENDGRID_API_KEY for sendgrid 
+	MOTD_API_KEY for OpenWeather
 
 
 Application.properties:
 
 	send.raken.only true/false - send only to rakenapp.com domain if true. Default to true
-	motd.source - url for the message of the day source
-	motd.user - basic auth username for motd source
-	motd.password - basic auth password for motd password
+	from.email - the from email address used for sending email
+	email.template - location of the email template
+	motd.source - url for the message of the day source	
+	motd.locations - city separated by comma for motd to retrieve weather information
+	motd.template - the template string for the motd
 	pool.size - pool size for the async service. Default to 1
 	max.pool.size - maximum pool size for the async service. Default to 10
 	queue.capacity - queue size to consume in the pool. Default to 200
@@ -31,7 +36,9 @@ Request Parameters :
   
 Request Body:
 
-Mandatory fields: To
+Mandatory fields: 
+
+	To
 
 Body payload example: json/application
     

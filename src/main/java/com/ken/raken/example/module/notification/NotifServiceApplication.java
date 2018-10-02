@@ -5,9 +5,13 @@ import java.util.concurrent.Executor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.client.RestTemplate;
+
+import com.sendgrid.SendGrid;
 
 @SpringBootApplication
 @EnableAsync
@@ -38,4 +42,17 @@ public class NotifServiceApplication {
         executor.initialize();
         return executor;
     }
+	
+	
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		// enable Autowired restTemplate
+	   return builder.build();
+	}
+	
+	@Bean
+	public SendGrid sendGrid(RestTemplateBuilder builder) {
+		// enable Autowired sendGrid
+	   return new SendGrid(System.getenv("SENDGRID_API_KEY"));
+	}
 }

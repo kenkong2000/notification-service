@@ -31,13 +31,16 @@ public class NotificationRestController  extends SpringBootServletInitializer{
 	  private NotificationService service;
 	
 	 @RequestMapping(value = "/email", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")
-	 public ResponseEntity<?> createEmails(@Valid @RequestBody ValidatedList<NotificationDto> notificationDtos, @RequestParam(value="enrich", required=false) final Boolean enrich)  throws ApiException {
-			 service.sendEmailAsyn(notificationDtos.getList(), enrich);
+	 public ResponseEntity<?> createEmails(@Valid @RequestBody ValidatedList<NotificationDto> notificationDtos, @RequestParam(value="enrich", required=false) Boolean enrich)  throws ApiException {
+			if(enrich == null) {
+				enrich=false;
+			} 
+		 	service.sendEmailAsyn(notificationDtos.getList(), enrich);
 	        return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 	 }
 	 
 	 
-//	
+//	 To find the status of the notification - TBC
 //	 @RequestMapping(value = "/email", method = RequestMethod.GET, produces = { "application/json" } )
 //	 public ResponseEntity<List<NotificationDto>> listAll(@RequestParam(value="fromemail", required=true) final String nameFilter, 
 //	    		@RequestParam(value="pageIndex", required=false, defaultValue="1") final Integer pageIndex,

@@ -10,6 +10,9 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
@@ -20,21 +23,11 @@ import org.apache.logging.log4j.LogManager;
 import com.ken.raken.example.module.notification.exception.ApiException;
 import com.ken.raken.example.module.notification.model.NotificationDto;
 
-import com.ken.raken.example.module.notification.rest.RestClientHelper;
-import com.ken.raken.example.module.notification.rest.RestClientHelper.RestClientHelperResponse;
+
 
 @Component
 public class NotificationService {
 	
-		
-	@Value("${motd.source:}")
-    private String motdSource;
-	
-	@Value("${motd.user:}")
-    private String motdSourceUser;
-	
-	@Value("${motd.password:}")
-    private String motdSourcePassword;
 	
 	@Value("${from.email:ykkong7@hotmail.com}")
     private String fromEmail;
@@ -44,71 +37,40 @@ public class NotificationService {
 	@Autowired
 	private SendServiceProviderSimpleFactory sendServiceProviderSimpleFactory;
 	
-
-	private RestClientHelper restClientHelper;
+	@Autowired
+	private MotdHelper motdHelper;
 	
 	 @PostConstruct
 	 public void init() {
-		 restClientHelper = new RestClientHelper();
+		// any init goes here
 	 }
 	
 	@Async
 	public void sendEmailAsyn(final List<NotificationDto> dtos, Boolean enrich) throws ApiException {
-		logger.debug("asyn task - start sending emails");
+		logger.info("asyn task - start sending emails");
 		
-		if(enrich == null) {
-			enrich=false;
-		}
-		for(NotificationDto notification : dtos) {
-			 sendNotification(notification, enrich);
+		for(NotificationDto notification : dtos) {			
+			String motd = null;
+								
+			// filter invalid emails 
+			List<String> sendList = new ArrayList<>();
+			filterMail(notification.getTo(), sendList);
+			filterMail(notification.getBcc(), sendList);
+			filterMail(notification.getCc(), sendList);
+			if(enrich) {
+				motd = motdHelper.getMessageOfTheDay();				
+			}		
+			
+			for(String recipient: sendList) {
+				// SendServiceProviderSimpleFactory could be extended to add other send service provider such as SMS, application notification etc
+				SendServiceProvider sendServiceProvider = sendServiceProviderSimpleFactory.getSendServiceProvider(recipient);			
+				sendServiceProvider.send(fromEmail, recipient, notification.getSubject(), notification.getBody(), motd);			
+			}
 		}
 	   	    
 	}
 	
-	public void sendNotification(final NotificationDto dto, final boolean enrich) throws ApiException {
-				
 		
-		
-		if(enrich) {
-			RestClientHelperResponse messageOfTheDay = restClientHelper.getnResourceByBasicAuth(motdSource,motdSourceUser, motdSourcePassword);
-			//TODO use template engine for example Velocity to insert message of the day header
-			StringBuilder sb = new StringBuilder(dto.getBody());
-			sb.append("\n").append(messageOfTheDay.getBody());
-			dto.setBody(sb.toString());
-		}
-		
-				
-		// filter invalid emails 
-		List<String> sendList = new ArrayList<>();
-		filterMail(dto.getTo(), sendList);
-		filterMail(dto.getBcc(), sendList);
-		filterMail(dto.getCc(), sendList);
-		
-		for(String recipient: sendList) {
-			SendServiceProvider sendServiceProvider = sendServiceProviderSimpleFactory.getSendServiceProvider(recipient);			
-			sendServiceProvider.send(fromEmail, recipient, dto.getSubject(), dto.getBody());			
-		}
-		
-	}
-	
-	
-	public List<NotificationDto> getNotificationResult(final String fromEmail, final int pageSize, final int pageIndex) {
-		
-		// To retrieve the notification result based on the fromEmail. This is currently out of scope of this demo but it shouldn't be hard to complete.
-		try {
-			
-			// retrieve from data source 
-			return null;
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			//Return empty list if any error instead of 
-			return new ArrayList<>();
-		}
-		
-		
-		
-	}
-	
 	private void filterMail(List<String> emails, List<String> sendList) {
 		if(emails == null || emails.isEmpty()) {
 			return;

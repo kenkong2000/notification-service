@@ -34,7 +34,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {		
-		//TODO Just to make it fast for simple auth.
+		// Read from other source
 		auth.inMemoryAuthentication().withUser(USER).password(passwordEncoder().encode(PW)).roles("SUPERUSER");
 		
 	}
