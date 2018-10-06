@@ -1,7 +1,16 @@
 package com.ken.raken.example.module.notification.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.ken.raken.example.module.notification.rest.RestClientHelper;
+import com.sendgrid.SendGrid;
 
 
 @Component
@@ -9,6 +18,12 @@ public class SendServiceProviderSimpleFactory {
 	
 	@Value("${send.raken.only:true}")
     private String sendRakenOnly;
+	
+	@Autowired
+	private SendGridEmailService sendGridEmailService;
+
+	@Autowired
+	private LoggingEmailService loggingEmailService;
 	
 	/**
 	 * Factory to create send service provider.
@@ -24,14 +39,15 @@ public class SendServiceProviderSimpleFactory {
 
     	if(Boolean.parseBoolean(sendRakenOnly)) {
     		if(email.contains("rakenapp.com")) {
-        		return new SendGridEmailService();
+        		return sendGridEmailService;
+        		
         	}
-            
-        	return new LoggingEmailService();
+    		return loggingEmailService;
+        	
     	}
+    	return sendGridEmailService;
     	
-    	return new SendGridEmailService();
-    	
-    }
+    }    
+
 
 }

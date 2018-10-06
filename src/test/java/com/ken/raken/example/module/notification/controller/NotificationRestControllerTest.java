@@ -2,18 +2,17 @@ package com.ken.raken.example.module.notification.controller;
 
 import static org.junit.Assert.*;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
-//import org.apache.commons.httpclient.HttpStatus;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,12 +22,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 import com.ken.raken.example.module.notification.model.NotificationDto;
 import com.ken.raken.example.module.notification.security.SpringSecurityConfig;
-import com.ken.raken.example.module.notification.model.NotificationDto;
+import com.ken.raken.example.module.notification.service.NotificationService;
+
 
 
 @RunWith(SpringRunner.class)
@@ -40,6 +40,8 @@ public class NotificationRestControllerTest {
 	
 	 @Autowired
 	 private TestRestTemplate restTemplate;
+	 
+	 NotificationService serviceMock;
 	 
 	 HttpHeaders headers = new HttpHeaders();
 	 
@@ -61,11 +63,22 @@ public class NotificationRestControllerTest {
 	 }
 	 
 	 @Test
+	 public void  whenCallWithAuth_wrongContentType_thenBadRequest() {
+		 headers.setContentType(MediaType.APPLICATION_XML);
+		 HttpEntity<String> request = new HttpEntity<String>(headers);
+		 ResponseEntity<String> responseEntity = restTemplate.exchange("/api/notification/email", HttpMethod.POST, request, String.class);
+		 assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, responseEntity.getStatusCode());
+		 
+		 
+	 }
+	 
+	 @Test
 	 public void  whenCallWithAuth_butNoBody_thenBadRequest() {
-		
+		 headers.setContentType(MediaType.APPLICATION_JSON);
 		 HttpEntity<String> request = new HttpEntity<String>(headers);
 		 ResponseEntity<String> responseEntity = restTemplate.exchange("/api/notification/email", HttpMethod.POST, request, String.class);
 		 assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		 
 	 }
 	 
 		 
@@ -77,7 +90,7 @@ public class NotificationRestControllerTest {
 		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
 		 ResponseEntity<String> responseEntity = restTemplate
 		            .exchange("/api/notification/email", HttpMethod.POST, entity, String.class);		
-		 assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		 assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());		
 	 }
 	 
 	 @Test
@@ -85,10 +98,13 @@ public class NotificationRestControllerTest {
 		 
 		 headers.setContentType(MediaType.APPLICATION_JSON);
 		 String requestJson ="[{\"to\":[\"ken@test.com\"],\"subject\":\"my subject\", \"body\":\"hellow world!\" }]";
+		 System.out.println("requestJson:" +requestJson);
 		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
-		 ResponseEntity<String> responseEntity = restTemplate
-		            .exchange("/api/notification/email", HttpMethod.POST, entity, String.class);		
+			
+		 ResponseEntity<NotificationDto[]> responseEntity = restTemplate
+		            .exchange("/api/notification/email", HttpMethod.POST, entity, NotificationDto[].class);		
 		 assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+		 
 	 }
 	 
 	 @Test
@@ -100,8 +116,23 @@ public class NotificationRestControllerTest {
 		 ResponseEntity<String> responseEntity = restTemplate
 		            .exchange("/api/notification/email", HttpMethod.POST, entity, String.class);		
 		 assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+		
 	 }
+	 	
 	 
-	
-	 // With body but need to valid the validator NotifcationDto
+	 @Test
+	 public void  whenCallWith_invalid_NotificationDto_thenSuccess() {
+		 	 
+		 headers.setContentType(MediaType.APPLICATION_JSON);
+		 // to1
+		 String requestJson ="[{\"to1\":[\"ken@test.com\", \"test@rakenapp.com\"],\"subject\":\"my subject\", \"body\":\"hellow world!\" }]";
+		 HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+		 ResponseEntity<String> responseEntity = restTemplate
+		            .exchange("/api/notification/email", HttpMethod.POST, entity, String.class);		
+		 assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		 assertTrue(responseEntity.getBody().contains("to is required"));
+		 
+	 }
+		 
+	 
 }

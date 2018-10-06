@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html><body>
+<p>
+<div style="background-color:white;color:black">$body</div>
+</p>
+<p>
+<div style="background-color:white;color:red">$!motd</div>
+</p>
+</body>
+</body></html>
