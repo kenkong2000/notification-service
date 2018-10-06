@@ -1,6 +1,6 @@
-# rakentest
+# notification-service
 
-Raken Email Service Demo 1.0.0
+Notification Service Demo 1.0.0
 
 This is a sample asynchronous services server to send email thru sendgrid.com
 
@@ -14,7 +14,8 @@ Required to setup environment variable:
 
 Application.properties:
 
-	send.raken.only true/false - send only to rakenapp.com domain if true. Default to true
+	send.dev.only true/false - send only to designated dev domain if true. Default to true
+	dev.domain - dev domain name
 	from.email - the from email address used for sending email
 	email.template - location of the email template
 	motd.source - url for the message of the day source	
@@ -44,17 +45,17 @@ Body payload example: json/application
     
       
        [
-        { "to":["test@rakenapp.com", "test2@rakenapp.com"], 
-         "cc": ["manager@rakenapp.com"], 
+        { "to":["tester1@abc123.com", "tester2@abc123.com"], 
+         "cc": ["manager1@abc123.com"], 
          "bcc":[], 
-         "subject":"hello world", 
-         "body": "hello ken" 
+         "subject":"notification service 1.0.0 completed", 
+         "body": "Please proceed testing" 
        },
-       { "to":["ken@test.com"], 
+       { "to":["developer@abc123.com"], 
          "cc": [], 
          "bcc":[], 
-         "subject":"hello world", 
-         "body": "hello ken" 
+         "subject":"notification service 1.0.0 test request sent", 
+         "body": "Test request for notification service 1.0.0 has been sent" 
        }
        ]
 
